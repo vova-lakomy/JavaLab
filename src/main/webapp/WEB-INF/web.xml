@@ -1,8 +1,10 @@
-<web-app
-        version="3.0"
-        xmlns="http://java.sun.com/xml/ns/javaee"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="3.0"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         metadata-complete="false">
 
     <display-name>Java Lab 2016</display-name>
 
@@ -13,6 +15,15 @@
     <servlet-mapping>
         <servlet-name>imageServlet</servlet-name>
         <url-pattern>/image/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>uploads</servlet-name>
+        <servlet-class>com.javalab.web.Uploads</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploads</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

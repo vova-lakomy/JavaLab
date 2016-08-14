@@ -13,10 +13,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.javalab.util.CustomFileUtils.*;
+import static com.javalab.util.CustomFileUtils.saveUploadedFile;
 
 
 public class ImageServlet extends HttpServlet {
+
+    private static final String UPLOAD_PATH = System.getenv("OPENSHIFT_DATA_DIR") + "uploaded/";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -26,11 +28,9 @@ public class ImageServlet extends HttpServlet {
             return;
         }
 
-        String uploadDirPath = getServletContext().getRealPath("/uploaded/");     //set directory to upload
-
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(512 * 1024);                                     //max memory buffer, bytes
-        File tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+        File tempDir = new File(UPLOAD_PATH);
         factory.setRepository(tempDir);
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setSizeMax(1024 * 1024 * 5);                                       //max upload file size, bytes
@@ -52,7 +52,7 @@ public class ImageServlet extends HttpServlet {
                 FileItem fileItem = (FileItem) item;
                 if (!fileItem.isFormField()) {
                     if (fileItem.getSize() > 0) {
-                        saveUploadedFile(fileItem, uploadDirPath, fileName);
+                        saveUploadedFile(fileItem, UPLOAD_PATH, fileName);
                     } else {
                         throw new Exception("File is not chosen");
                     }
@@ -68,10 +68,9 @@ public class ImageServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String uploadPath = getServletContext().getRealPath("/uploaded/");     //contents directory
-        List<String> fileNames = new ArrayList<>();
+        List<String> fileNames = new ArrayList<String>();
 
-        File[] files = new File(uploadPath).listFiles();                        //get list of files and folders
+        File[] files = new File(UPLOAD_PATH).listFiles();                        //get list of files and folders
 
         for (File file : files) {
             if (file.isFile()) {                                                //save only files to list
@@ -81,7 +80,7 @@ public class ImageServlet extends HttpServlet {
 
         response.setCharacterEncoding("UTF-8");
         request.setAttribute("fileNames", fileNames);
-        request.setAttribute("uploadPath", "./uploaded/");
+        request.setAttribute("uploadPath", UPLOAD_PATH);
         request.getRequestDispatcher("/list.jsp").forward(request, response);
     }
 

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class CustomFileUtils {
 
-    private static Map<String, Integer> filePrefixMap = new HashMap<>();
+    private static Map<String, Integer> filePrefixMap = new HashMap<String, Integer>();
 
     private CustomFileUtils() {
     }
