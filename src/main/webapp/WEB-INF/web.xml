@@ -14,7 +14,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>imageServlet</servlet-name>
-        <url-pattern>/image/*</url-pattern>
+        <url-pattern>/images/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -30,4 +30,6 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+         
 </web-app>
+

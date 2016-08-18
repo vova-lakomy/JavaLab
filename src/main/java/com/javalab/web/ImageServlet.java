@@ -13,16 +13,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.javalab.util.CustomFileUtils.saveUploadedFile;
+import static com.javalab.util.CustomImageUtils.saveUploadedFile;
 
 
 public class ImageServlet extends HttpServlet {
 
-    private static final String UPLOAD_PATH = System.getenv("OPENSHIFT_DATA_DIR") + "uploaded/";
+    private static final String IMAGE_PATH = System.getenv("OPENSHIFT_DATA_DIR") + "uploaded/";
+    private static final String THUMBNAIL_PATH = System.getenv("OPENSHIFT_DATA_DIR") + "thumbs/";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
 
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);     //check if the encoding type
         if (!isMultipart) {                                                      //is 'multipart/form-data'
@@ -32,7 +31,7 @@ public class ImageServlet extends HttpServlet {
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(512 * 1024);                                     //max memory buffer, bytes
-        File tempDir = new File(UPLOAD_PATH);
+        File tempDir = new File(IMAGE_PATH);
         factory.setRepository(tempDir);
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setSizeMax(1024 * 1024 * 5);                                       //max upload file size, bytes
@@ -54,7 +53,7 @@ public class ImageServlet extends HttpServlet {
             }
 
             if (fileToUpload.getSize() > 0) {
-                saveUploadedFile(fileToUpload, UPLOAD_PATH, fileName);
+                saveUploadedFile(fileToUpload, IMAGE_PATH, THUMBNAIL_PATH, fileName);
             } else {
                 throw new Exception("File is not chosen, please choose the file first");
             }
@@ -64,15 +63,14 @@ public class ImageServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             return;
         }
-        response.sendRedirect("/image");
+        response.sendRedirect("/images");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
         List<String> fileNames = new ArrayList<String>();
 
-        File[] files = new File(UPLOAD_PATH).listFiles();                        //get list of files and folders
+        File[] files = new File(IMAGE_PATH).listFiles();                        //get list of files and folders
 
         for (File file : files) {
             if (file.isFile()) {                                                //save only files to list
@@ -82,7 +80,7 @@ public class ImageServlet extends HttpServlet {
 
         response.setCharacterEncoding("UTF-8");
         request.setAttribute("fileNames", fileNames);
-        request.setAttribute("uploadPath", UPLOAD_PATH);
+        request.setAttribute("uploadPath", IMAGE_PATH);
         request.getRequestDispatcher("/list.jsp").forward(request, response);
     }
 

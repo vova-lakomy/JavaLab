@@ -9,7 +9,7 @@
         <c:forEach items="${fileNames}" var="fileName">
             <div class="custom-image-container">
                 <a href="/uploads/uploaded/${fileName}">
-                    <img src="/uploads/uploaded/${fileName}" height="85px">
+                    <img src="/uploads/thumbs/${fileName}" height="85px">
                 </a>
                 <p>${fileName}</p>
             </div>

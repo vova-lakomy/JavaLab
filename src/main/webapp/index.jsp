@@ -2,7 +2,7 @@
 
 <div class="container-fluid" align="center">
     <div class="upload-form-container">
-        <form accept-charset="UTF-8" class="form" method="POST" enctype="multipart/form-data" action="image/">
+        <form accept-charset="UTF-8" class="form" method="POST" enctype="multipart/form-data" action="images/">
             <div class="form-group">
                 <label for="file-input"> File to upload: </label>
                 <input id="file-input" class="file" type="file" name="data" accept="image/*">
