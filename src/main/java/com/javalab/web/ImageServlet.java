@@ -5,11 +5,15 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +22,12 @@ import static com.javalab.util.CustomFileUtils.saveUploadedFile;
 
 public class ImageServlet extends HttpServlet {
 
-    private static final String UPLOAD_PATH = System.getenv("OPENSHIFT_DATA_DIR") + "uploaded/";
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        final String UPLOAD_PATH = getServletContext().getRealPath("/upload/");
+
 
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);     //check if the encoding type
         if (!isMultipart) {                                                      //is 'multipart/form-data'
@@ -39,25 +46,24 @@ public class ImageServlet extends HttpServlet {
         try {
             List items = upload.parseRequest(request);
             String fileName = "";
-            for (Object item : items) {                                           //searching for file name in request
-                FileItem fileItem = (FileItem) item;
+            FileItem fileToUpload = null;
+            for (Object item : items) {                                           //get file and file-name fields
+                FileItem fileItem = (FileItem) item;                              //from request
                 if (fileItem.isFormField()) {
                     if (fileItem.getFieldName().equals("file-name")) {
                         fileName = fileItem.getString("UTF-8");
                     }
+                } else{
+                    fileToUpload = fileItem;
                 }
             }
 
-            for (Object item : items) {                                      //searching for file to upload in request
-                FileItem fileItem = (FileItem) item;
-                if (!fileItem.isFormField()) {
-                    if (fileItem.getSize() > 0) {
-                        saveUploadedFile(fileItem, UPLOAD_PATH, fileName);
-                    } else {
-                        throw new Exception("File is not chosen");
-                    }
-                }
+            if (fileToUpload.getSize() > 0) {
+                saveUploadedFile(fileToUpload, UPLOAD_PATH, fileName);
+            } else {
+                throw new Exception("File is not chosen, please choose the file first");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
@@ -67,6 +73,8 @@ public class ImageServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        final String UPLOAD_PATH = getServletContext().getRealPath("/upload/");
 
         List<String> fileNames = new ArrayList<String>();
 
