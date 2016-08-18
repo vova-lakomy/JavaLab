@@ -40,6 +40,18 @@ public class CustomImageUtils {
     }
 
     /**
+     * checks if the selected file item content type is "image"
+     *
+     * @param item item to check
+     * @throws Exception
+     */
+    public static void checkContent(FileItem item) throws Exception {
+        if (!"image".equalsIgnoreCase(item.getContentType().split("/")[0])){
+            throw new Exception("Chosen file is not an image. Choose another one. ");
+        }
+    }
+
+    /**
      * checks if the desired file name is empty, if so - returns the name of the original file
      *
      * @param item     original file
@@ -48,10 +60,10 @@ public class CustomImageUtils {
      */
     private static String fixFileName(FileItem item, String fileName) {
         if (fileName.equals("")) {
-            return item.getName();
+            return item.getName().replace(' ', '_');
         } else {
             String fileExtension = item.getName().substring(item.getName().lastIndexOf('.'));
-            return fileName + fileExtension;
+            return fileName.replace(' ', '_') + fileExtension;
         }
     }
 

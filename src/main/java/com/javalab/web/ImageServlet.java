@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.javalab.util.CustomImageUtils.saveUploadedFile;
+import static com.javalab.util.CustomImageUtils.*;
 
 
 public class ImageServlet extends HttpServlet {
@@ -53,6 +53,7 @@ public class ImageServlet extends HttpServlet {
             }
 
             if (fileToUpload.getSize() > 0) {
+                checkContent(fileToUpload);
                 saveUploadedFile(fileToUpload, IMAGE_PATH, THUMBNAIL_PATH, fileName);
             } else {
                 throw new Exception("File is not chosen, please choose the file first");
@@ -74,7 +75,10 @@ public class ImageServlet extends HttpServlet {
 
         for (File file : files) {
             if (file.isFile()) {                                                //save only files to list
-                fileNames.add(file.getName());
+                String fileName = file.getName();
+                if (!".tmp".equals(fileName.substring(fileName.lastIndexOf(".")))) { // do not add *.tmp files to list
+                    fileNames.add(fileName);
+                }
             }
         }
 
