@@ -2,7 +2,6 @@ package com.javalab.web;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
