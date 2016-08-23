@@ -76,7 +76,7 @@ public class ImageServlet extends HttpServlet {
         for (File file : files) {
             if (file.isFile()) {                                                //save only files to list
                 String fileName = file.getName();
-                if (!".tmp".equals(fileName.substring(fileName.lastIndexOf(".")))) { // do not add *.tmp files to list
+                if (!".tmp".equals(fileName.substring(fileName.lastIndexOf('.')))) { // do not add *.tmp files to list
                     fileNames.add(fileName);
                 }
             }

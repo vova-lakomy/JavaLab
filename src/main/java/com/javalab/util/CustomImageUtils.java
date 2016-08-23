@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomImageUtils {
+public final class CustomImageUtils {
 
     private static Map<String, Integer> filePrefixMap = new HashMap<String, Integer>();
 
